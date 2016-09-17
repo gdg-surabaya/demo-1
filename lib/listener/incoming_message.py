@@ -44,6 +44,6 @@ class IncomingMessage:
 				headers={'Content-Type': 'application/json'}
 			)
 
-			vision_response = r.json()["landmarkAnnotations"]
+			vision_response = r.json()["responses"]["landmarkAnnotations"]
 			print("Ini adalah %s" % vision["description"])
 		res.status = falcon.HTTP_200
