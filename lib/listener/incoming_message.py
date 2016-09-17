@@ -45,5 +45,5 @@ class IncomingMessage:
 			)
 
 			vision_response = r.json()["responses"][0]["landmarkAnnotations"]
-			print("Ini adalah %s" % vision["description"])
+			print("Ini adalah %s" % vision_response["description"])
 		res.status = falcon.HTTP_200
