@@ -11,7 +11,7 @@ class IncomingMessage:
 		if not body:
 			raise falcon.HTTPBadRequest("Empty Request Body", "A valid JSON document is required.")
 		body = json.loads(body.decode("utf-8"))
-
+		print(json.dumps(body, indent=4))
 		if "mediaUrl" in body["messages"][0]:
 			media_url = body["messages"][0]["mediaUrl"]
 			r = requests.get(media_url, stream=True)
