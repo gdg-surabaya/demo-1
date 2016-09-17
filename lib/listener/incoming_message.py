@@ -3,6 +3,7 @@ import falcon
 import json
 import shutil
 import os
+import base64
 
 class IncomingMessage:
 	def on_post(self, req, res):
@@ -18,5 +19,23 @@ class IncomingMessage:
 				with open(os.path.join(os.getcwd(),"images.jpg"), "wb") as f:
 					r.raw.decode_content = True
 					shutil.copyfileobj(r.raw,f)
+			image_content = open(os.path.join(os.getcwd(), "images.jpg"),"rb")
+			encoded_image = base64.b64encode(image_content.read())
+			print("%s" % encoded_image)
+			request_document = {
+			  "requests":[
+			    {
+			      "image":{
+			        "content": "%s" % encoded_image
+			      },
+			      "features": [
+			        {
+			          "type":"LANDMARK_DETECTION",
+			          "maxResults":1
+			        }
+			      ]
+			    }
+			  ]
+			}
 
 		res.status = falcon.HTTP_200
