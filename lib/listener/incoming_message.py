@@ -37,5 +37,7 @@ class IncomingMessage:
 			    }
 			  ]
 			}
+			r = requests.post("https://vision.googleapis.com/v1/images:annotate?key=%s" % ("AIzaSyCIzFcPY7DMsUZgR4h22MOP45Wh-RXtS4k"), json=request_document)
+			print(json.dumps(r.json,indent=4))
 
 		res.status = falcon.HTTP_200
