@@ -21,7 +21,7 @@ class IncomingMessage:
 					shutil.copyfileobj(r.raw,f)
 			image_content = open(os.path.join(os.getcwd(), "images.jpg"),"rb")
 			encoded_image = base64.b64encode(image_content.read())
-			print("%s" % encoded_image)
+			
 			request_document = {
 			  "requests":[
 			    {
@@ -37,7 +37,11 @@ class IncomingMessage:
 			    }
 			  ]
 			}
-			r = requests.post("https://vision.googleapis.com/v1/images:annotate?key=%s" % ("AIzaSyCIzFcPY7DMsUZgR4h22MOP45Wh-RXtS4k"), json=request_document)
+			r = requests.post(
+				"https://vision.googleapis.com/v1/images:annotate?key=%s" % ("AIzaSyCIzFcPY7DMsUZgR4h22MOP45Wh-RXtS4k"), 
+				data=json.dumps(request_document),
+				headers={'Content-Type': 'application/json'}
+			)
 			print(json.dumps(r.json,indent=4))
 
 		res.status = falcon.HTTP_200
