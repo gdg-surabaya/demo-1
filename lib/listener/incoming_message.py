@@ -19,7 +19,7 @@ class IncomingMessage:
 				with open(os.path.join(os.getcwd(),"images.jpg"), "wb") as f:
 					r.raw.decode_content = True
 					shutil.copyfileobj(r.raw,f)
-			image_content = open(os.path.join(os.getcwd(), "images.jpg"),"rb")
+			image_content = open(os.path.join(os.getcwd(), "images.jpg"),"r")
 			encoded_image = base64.b64encode(image_content.read())
 			
 			request_document = {
