@@ -2,6 +2,7 @@ import requests
 import falcon
 import json
 import shutil
+import os
 
 class IncomingMessage:
 	def on_post(self, req, res):
