@@ -42,6 +42,6 @@ class IncomingMessage:
 				data=json.dumps(request_document),
 				headers={'Content-Type': 'application/json'}
 			)
-			print(json.dumps(r.json,indent=4))
+			print(json.dumps(r.json(),indent=4))
 
 		res.status = falcon.HTTP_200
