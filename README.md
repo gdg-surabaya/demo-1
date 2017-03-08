@@ -1,9 +1,16 @@
-# Setup
-You need to have:
-  1. Docker
-  2. Git
+# Requirements
+    - You need to have Smooch account
+    - You need to generate `jwt` token. I am using `pyjwt` to generate.
+    - You need to have Vision API Key
 
-Please follow this instruction:
-  1. docker pull gdgsurabaya/demo-1
-  2. git clone http://github.com/gdg-surabaya/demo-1.git
-  3. docker run -d --name demo_1 -p 80:8000 -v $(pwd)/demo-1:/root/app gdgsurabaya/demo-1 bash kick_start.sh
+# Setup
+    - Make `config.ini`. The config file is placed in the same level as `main.py`
+    - Fill in the details.
+
+# `config.ini` template
+```ini
+[keys]
+api_key = xxx
+jwt_token = xxx
+```
+    

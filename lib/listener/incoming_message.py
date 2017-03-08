@@ -1,9 +1,13 @@
-import requests
-import falcon
 import json
-import shutil
 import os
-import base64
+
+from ..model.messages import Message
+from ..model.images import Image
+from ..model.landmark_detection import LandmarkDetection
+from ..model.smooch import Smooch
+
+import falcon
+import profig
 
 class IncomingMessage:
 	def on_post(self, req, res):
@@ -11,39 +15,29 @@ class IncomingMessage:
 		if not body:
 			raise falcon.HTTPBadRequest("Empty Request Body", "A valid JSON document is required.")
 		body = json.loads(body.decode("utf-8"))
-		print(json.dumps(body, indent=4))
-		if "mediaUrl" in body["messages"][0]:
-			media_url = body["messages"][0]["mediaUrl"]
-			r = requests.get(media_url, stream=True)
-			if r.status_code == 200:
-				with open(os.path.join(os.getcwd(),"images.jpg"), "wb") as f:
-					r.raw.decode_content = True
-					shutil.copyfileobj(r.raw,f)
-			image_content = open(os.path.join(os.getcwd(), "images.jpg"),"rb")
-			encoded_image = base64.b64encode(image_content.read())
-			encoded_image = encoded_image.decode("utf-8")
+		
+		cfg = profig.Config(os.path.join(os.getcwd(), "config.ini"))
+		cfg.sync()
+		
+		message = Message()
+		message.parse_from(body["messages"][0])
+
+		image = Image()
+		image.download(message.media_url)
+		
+		reply = Message()
+		reply.to = message.author_id
+		try:
+			vision = LandmarkDetection()
+			vision.api_key = cfg["keys.api_key"]
+			vision.detect(image)
 			
-			request_document = {
-			  "requests":[
-			    {
-			      "image":{
-			        "content": encoded_image
-			      },
-			      "features": [
-			        {
-			          "type":"LANDMARK_DETECTION",
-			          "maxResults":1
-			        }
-			      ]
-			    }
-			  ]
-			}
-			r = requests.post(
-				"https://vision.googleapis.com/v1/images:annotate?key=%s" % ("AIzaSyCIzFcPY7DMsUZgR4h22MOP45Wh-RXtS4k"), 
-				data=json.dumps(request_document),
-				headers={'Content-Type': 'application/json'}
-			)
-			
-			vision_response = r.json()["responses"][0]["landmarkAnnotations"][0]
-			print("Ini adalah %s" % vision_response["description"])
+			reply.text = "Ini adalah %s" % vision.landmark_name
+		except AssertionError as ex:
+			reply.text = str(ex)
+
+		smooch = Smooch()
+		smooch.jwt = cfg["keys.jwt_token"]
+		smooch.send_message(role="appMaker", message=reply)
+
 		res.status = falcon.HTTP_200
