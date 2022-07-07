@@ -6,7 +6,7 @@ gunicorn==19.7.0
 html5lib==0.999
 profig==0.4.1
 python-mimeparse==1.6.0
-requests==2.2.1
+requests==2.20.0
 six==1.5.2
 urllib3==1.7.1
 virtualenv==15.0.0
