@@ -10,4 +10,4 @@ requests==2.2.1
 six==1.5.2
 urllib3==1.7.1
 virtualenv==15.0.0
-wheel==0.24.0
+wheel==0.38.1
